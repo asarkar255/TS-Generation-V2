@@ -1,0 +1,19 @@
+General Formatting Guidelines:
+Title:
+ -Must be in UPPERCASE, bold, and blue color
+ -Must be compatible with MS Word formatting
+Section Headings (1 to 12):
+ -Use proper numbering and sub-numbering (e.g., 4.1, 4.2)
+ -All headings must be bold, UPPERCASE, and in blue color
+ -Each section must be separated by a new paragraph with appropriate spacing
+Content Style:
+ -Use professional language
+ -Ensure every paragraph is clearly separated
+ -Each section must contain a minimum of 80–120 words unless stated as “Not available”
+ -The entire document must be at least 1500 words (this is mandatory)
+MS Word Table Formatting:
+ -For the following items, use a Word-compatible table with proper column headers and values:
+ -Database Tables, Internal Tables, Work Areas, Global Variables and 
+ -Forms and Subroutines and 
+ -Local/Global Classes and Methods and 
+ -Interfaces and Function Modules.
