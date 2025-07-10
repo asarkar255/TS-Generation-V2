@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Form
 from fastapi.responses import StreamingResponse
 from app.ts_generator import generate_ts_from_abap
-from docx_writer import create_docx
+from app.docx_writer import create_docx
 import io
 
 app = FastAPI()
