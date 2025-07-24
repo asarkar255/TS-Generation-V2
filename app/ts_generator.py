@@ -50,48 +50,6 @@ def extract_abap_explanation(abap_code: str) -> str:
     return explanation_response.content if hasattr(explanation_response, "content") else str(explanation_response)
 
 
-# ✅ Step 2: Extract version history from ABAP comments
-def extract_version_history(abap_code: str) -> str:
-    """
-    Extracts version history entries from ABAP comments and formats them as a Markdown-compatible table.
-    """
-    pattern = re.compile(r"\*\s*(Changed by|Modified by|Correction(?: by)?)(.*)", re.IGNORECASE)
-    version_table = []
-    version_no = 1
-
-    for line in abap_code.splitlines():
-        match = pattern.search(line)
-        if match:
-            entry_type = match.group(1).strip().capitalize()
-            details = match.group(2).strip().replace(":", " -", 1)
-            changed_by = "Unknown"
-            change_date = "Unknown"
-            description = details
-
-            # Attempt to extract name and date
-            by_match = re.search(r"by\s+([\w\s]+)\s+on\s+(\d{4}-\d{2}-\d{2})", line, re.IGNORECASE)
-            if by_match:
-                changed_by = by_match.group(1).strip()
-                change_date = by_match.group(2).strip()
-            else:
-                name_match = re.search(r"by\s+([\w\s]+)", line, re.IGNORECASE)
-                if name_match:
-                    changed_by = name_match.group(1).strip()
-
-            version_table.append(f"| {version_no}.0 | {changed_by} | {change_date} | {description} |")
-            version_no += 1
-
-    if not version_table:
-        version_table.append("| 1.0 | Initial Developer | N/A | Initial Version |")
-
-    markdown_table = (
-        "\n| Version No. | Changed By | Change Date | Description of Change |\n"
-        "|-------------|------------|-------------|------------------------|\n" +
-        "\n".join(version_table)
-    )
-
-    return markdown_table
-
 
 # ✅ Step 3: Generate formatted Technical + Functional Description
 def generate_description_from_explanation(explanation: str) -> str:
@@ -111,7 +69,6 @@ def generate_description_from_explanation(explanation: str) -> str:
 def generate_ts_from_abap(abap_code: str) -> str:
     explanation = extract_abap_explanation(abap_code)
     formatted_description = generate_description_from_explanation(explanation)
-    version_table = extract_version_history(abap_code)
 
     retrieved_docs = retriever.get_relevant_documents(abap_code)
     retrieved_context = "\n\n".join([doc.page_content for doc in retrieved_docs])
@@ -126,7 +83,6 @@ def generate_ts_from_abap(abap_code: str) -> str:
         "RAG Context:\n{context}\n\n"
         "ABAP Code:\n{abap_code}\n\n"
         "Explanation:\n{explanation}\n\n"
-        "Version History Table:\n{version_table}\n\n"
         "Formatted Technical + Functional Description:\n{description}"
     )
 
@@ -135,7 +91,7 @@ def generate_ts_from_abap(abap_code: str) -> str:
         abap_code=abap_code,
         explanation=explanation,
         description=formatted_description,
-        version_table=version_table
+
     )
 
     llm = ChatOpenAI(model="gpt-4.1", temperature=0.4)
