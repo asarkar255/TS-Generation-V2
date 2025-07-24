@@ -41,21 +41,28 @@ def add_code_block(doc, code_lines):
     run.font.name = "Courier New"
     run.font.size = Pt(10)
     para.space_after = Pt(6)
+    doc.add_paragraph()
 
 def add_table(doc, lines):
-    rows = [line.strip().strip("|").split("|") for line in lines]
+    rows = [line.strip().strip("|").split("|") for line in lines if line.strip()]
     rows = [[cell.strip() for cell in row] for row in rows if row]
     if not rows:
         return
-    table = doc.add_table(rows=1, cols=len(rows[0]))
+    if len(rows) == 1:
+        headers = rows[0]
+        rows.append([""] * len(headers))  # add empty row
+    else:
+        headers = rows[0]
+    table = doc.add_table(rows=1, cols=len(headers))
     table.style = 'Table Grid'
-    for i, cell in enumerate(rows[0]):
+    for i, cell in enumerate(headers):
         table.cell(0, i).text = cell
     for row in rows[1:]:
         row_cells = table.add_row().cells
         for i, cell in enumerate(row):
             if i < len(row_cells):
                 row_cells[i].text = cell
+    doc.add_paragraph()
 
 def create_docx(ts_text: str, buffer):
     doc = Document()
@@ -67,16 +74,20 @@ def create_docx(ts_text: str, buffer):
     in_code_block = False
     code_block_lines = []
     table_lines = []
-    in_table = False
 
     def flush_content():
         if current_section:
             add_heading(doc, current_section)
         for para in current_content:
-            if para.strip().startswith("**") and para.strip().endswith("**"):
+            if para.strip().startswith("**") and para.strip().endswith("**") and len(para.split()) <= 3:
                 add_subheading(doc, para)
+            elif para.startswith("|") and para.endswith("|"):
+                table_lines.append(para)
             else:
                 add_paragraph(doc, para)
+        if table_lines:
+            add_table(doc, table_lines)
+            table_lines.clear()
 
     section_header_pattern = re.compile(r"^\d+\.\s+[A-Z ]+$")
     page_break_marker = re.compile(r"^PAGE \d+", re.IGNORECASE)
@@ -102,17 +113,6 @@ def create_docx(ts_text: str, buffer):
             code_block_lines.append(line)
             continue
 
-        if line.startswith("|") and line.endswith("|"):
-            table_lines.append(line)
-            in_table = True
-            continue
-        elif in_table:
-            flush_content()
-            current_content = []
-            add_table(doc, table_lines)
-            table_lines = []
-            in_table = False
-
         if section_header_pattern.match(line):
             flush_content()
             current_section = line
@@ -121,13 +121,9 @@ def create_docx(ts_text: str, buffer):
 
         current_content.append(line)
 
-    if in_table:
-        flush_content()
-        add_table(doc, table_lines)
-    elif in_code_block:
-        add_code_block(doc, code_block_lines)
-
     if current_section and current_content:
         flush_content()
+    if table_lines:
+        add_table(doc, table_lines)
 
     doc.save(buffer)
