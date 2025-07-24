@@ -44,7 +44,7 @@ def extract_abap_explanation(abap_code: str) -> str:
     return explanation_response.content if hasattr(explanation_response, "content") else str(explanation_response)
 
 # Step 5: Final TSD Generator
-def generate_ts_from_abap(abap_code: str, save_output: bool = True) -> str:
+def generate_ts_from_abap(abap_code: str) -> str:
     """
     Generates a detailed Technical Specification from ABAP code using both explanation and RAG.
     """
