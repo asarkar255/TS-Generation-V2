@@ -1,60 +1,50 @@
-import openai
-import os
-from langchain.prompts import ChatPromptTemplate
-from langchain_openai import ChatOpenAI
-from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings
-from langchain.chains import RetrievalQA
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import TextLoader
-from dotenv import load_dotenv
+from langchain_core.messages import SystemMessage, HumanMessage
 
-load_dotenv()
+def extract_abap_explanation(abap_code: str) -> str:
+    """
+    Step 1: Use GPT to generate technical and functional explanation of ABAP code
+    """
+    explanation_prompt = [
+        SystemMessage(content="You are an experienced SAP Techno-Functional Architect. "
+                              "Explain the given ABAP code line-by-line in detail from both a technical and functional perspective."),
+        HumanMessage(content=abap_code)
+    ]
 
-os.environ["LANGCHAIN_TRACING_V2"]="true"
-os.environ["LANGCHAIN_API_KEY"]=os.getenv("LANGCHAIN_API_KEY")
-os.environ["OPENAI_API_KEY"]=os.getenv("OPENAI_API_KEY")
-# Load your RAG knowledge base from a text file
-rag_file_path = os.path.join(os.path.dirname(__file__), "rag_knowledge_base.txt")
-loader = TextLoader(file_path=rag_file_path,encoding="utf-8")
-documents = loader.load()
+    llm = ChatOpenAI(model="gpt-4o", temperature=0.3)
+    explanation_response = llm.invoke(explanation_prompt)
+    return explanation_response.content if hasattr(explanation_response, "content") else str(explanation_response)
 
-# Split documents for embedding
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=20000, chunk_overlap=200)
-docs = text_splitter.split_documents(documents)
 
-# Create vector store with OpenAI embeddings and Chroma
-embedding = OpenAIEmbeddings()
-vectorstore = Chroma.from_documents(docs, embedding)
-
-# Create retriever
-retriever = vectorstore.as_retriever()
-qa_chain = RetrievalQA.from_chain_type(
-    llm=ChatOpenAI(model="gpt-4o", temperature=0.4),
-    chain_type="stuff",
-    retriever=retriever,
-)
 def generate_ts_from_abap(abap_code: str) -> str:
-    # Retrieve relevant documents (just content)
+    """
+    Step 2: Generate final Technical Specification from RAG + Explanation + Code
+    """
+
+    # Step 1: Generate explanation
+    explanation = extract_abap_explanation(abap_code)
+
+    # Step 2: Retrieve additional domain-specific context from RAG
     retrieved_docs = retriever.get_relevant_documents(abap_code)
     retrieved_context = "\n\n".join([doc.page_content for doc in retrieved_docs])
 
     if not retrieved_context.strip():
         return "No relevant context found in the RAG base. Please verify the ABAP code or knowledge file."
 
-    # Compose a structured prompt
+    # Combine explanation and RAG content as context
+    combined_context = f"### Technical & Functional Explanation:\n{explanation}\n\n### RAG Knowledge Base Context:\n{retrieved_context}"
+
+    # Create prompt template for TSD generation
     prompt_template = ChatPromptTemplate.from_template(
-        "Given the following context and ABAP code, generate a detailed, minimum 1000-word technical specification in professional DOCX-compatible formatting using System message provided.\n\n"
+        "You are an SAP ABAP Technical Architect. Based on the following explanation, RAG context, and ABAP code, "
+        "generate a detailed and professionally formatted Technical Specification Document (minimum 2000 words) "
+        "with DOCX-compatible formatting, section titles, and numbering.\n\n"
         "Context:\n{context}\n\n"
-        # "Context:\n{documents}\n\n"
         "ABAP Code:\n{abap_code}"
     )
-    messages = prompt_template.format_messages(context=retrieved_context, abap_code=abap_code)
+    messages = prompt_template.format_messages(context=combined_context, abap_code=abap_code)
 
-    # Query GPT
+    # Step 3: Generate the TSD
     llm = ChatOpenAI(model="gpt-4o", temperature=0.4)
     response = llm.invoke(messages)
 
     return response.content if hasattr(response, "content") else str(response)
-
-
