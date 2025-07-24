@@ -71,12 +71,11 @@ def generate_ts_from_abap(abap_code: str) -> str:
 
     # Prompt to generate TSD
     prompt_template = ChatPromptTemplate.from_template(
-        "You are an SAP ABAP Technical Architect. Based on the following explanation, RAG context, and ABAP code, "
+        "You are an SAP ABAP Technical Architect. Based on the following explanation, RAG context "
         "generate a detailed and professionally formatted Technical Specification Document (minimum 2000 words) "
         "Use all lines from {explanation} to create Pseudo Code section of TSD."
         "with DOCX-compatible formatting, section titles, and numbering.\n\n"
         "Context:\n{context}\n\n"
-        "ABAP Code:\n{abap_code}"
     )
 
     messages = prompt_template.format_messages(context=combined_context, abap_code=abap_code, explanation=explanation)

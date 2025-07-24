@@ -64,7 +64,4 @@ Title:
     -a text-based flowchart using Mermaid or PlantUML syntax, OR
     -a diagram image (if image generation is supported)."**
 
-ABAP Code: 
-{abap_code}
-
 Technical Specification:
