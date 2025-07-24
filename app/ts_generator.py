@@ -38,18 +38,15 @@ def extract_abap_explanation(abap_code: str) -> str:
                               "Explain the given ABAP code line-by-line in detail from both a technical and functional perspective."
                               "Output should be like below:\n"
                               "Selection Screen Parameters:\n"
-                              "Technical: Technical Explanation of selection screen parameters\n"
-                              "SAP Code Line 1:\n"
-                              "Technical: Technical Explanation of line 1\n"
-                              "Functional: Functional Explanation of line 1\n"
-                              "SAP Code Line 2:\n"
-                              "Technical: Technical Explanation of line 2\n"  
-                              "Functional: Functional Explanation of line 2\n"
+                              "Technical: Technical Explanation of selection screen PARAMETERS and SELECT-OPTIONS\n"
+                                "Technical: Technical Explanation of line n\n"
+                                "Functional: Functional Explanation of line n\n"
+                                "Ensure to cover all lines in the ABAP code."
                                 ),
         HumanMessage(content=abap_code)
     ]
 
-    llm = ChatOpenAI(model="gpt-4o", temperature=0.3)
+    llm = ChatOpenAI(model="gpt-4.1", temperature=0.3)
     explanation_response = llm.invoke(explanation_prompt)
     return explanation_response.content if hasattr(explanation_response, "content") else str(explanation_response)
 
@@ -86,7 +83,7 @@ def generate_ts_from_abap(abap_code: str) -> str:
     messages = prompt_template.format_messages(context=retrieved_context , abap_code=abap_code, explanation=explanation)
 
     # Call LLM
-    llm = ChatOpenAI(model="gpt-4o", temperature=0.4)
+    llm = ChatOpenAI(model="gpt-4.1", temperature=0.4)
     response = llm.invoke(messages)
 
     final_tsd = response.content if hasattr(response, "content") else str(response)
