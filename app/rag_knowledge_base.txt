@@ -5,7 +5,7 @@ Example:
 Title:
 "Technical Specification for ABAP Program"
 -Formatting shoud be docx compatible.
--Remember Titles should be Bold and in uppercase.
+-Remember Titles should be Bold and in uppercase.(Mandatory)
 -Provide Numbering and sub-numbering for each section.
 -Title and Header should be in Blue color.
 -TSD should be minimum 2000 words. (this is is a must)
