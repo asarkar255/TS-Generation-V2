@@ -35,7 +35,14 @@ def extract_abap_explanation(abap_code: str) -> str:
     """
     explanation_prompt = [
         SystemMessage(content="You are an experienced SAP Techno-Functional Solution Architect. "
-                              "Explain the given ABAP code line-by-line in detail from both a technical and functional perspective."),
+                              "Explain the given ABAP code line-by-line in detail from both a technical and functional perspective."
+                              "Output should be like below:\n"
+                              "SAP Code Line 1:\n"
+                              "Technical: Technical Explanation of line 1\n"
+                              "Functional: Functional Explanation of line 1\n"
+                              "SAP Code Line 2:\n"
+                              "Technical: Technical Explanation of line 2\n"  
+                              "Functional: Functional Explanation of line 2\n"  ),
         HumanMessage(content=abap_code)
     ]
 
