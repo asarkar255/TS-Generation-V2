@@ -31,7 +31,8 @@ Title:
     -Local/Global Classes and Methods in separate table format type MS word with sub headers in new line with proper spacing.
     -Interfaces and Function Modules used in separate table format type MS word with sub headers in new line with proper spacing.
 5.Pseudo Code of Program: (Mandatory) 
-    -create Pseudo code considering the below points with proper heading and spacing in new line.
+    - create Pseudo code considering {explanation} the below points with proper heading and spacing in new line.
+    - Add all lines from {explanation} in this section( THIS ONE IS MOST HIGH PRIORITY POINT OF ALL).
     - Identify the main program flow and logic.
     - Extract key business operations and data processing steps.
     - Simplify complex ABAP syntax into readable English statements.
