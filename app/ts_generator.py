@@ -72,7 +72,7 @@ def generate_ts_from_abap(abap_code: str) -> str:
         "ABAP Code:\n{abap_code}"
     )
 
-    messages = prompt_template.format_messages(context=combined_context, abap_code=abap_code)
+    messages = prompt_template.format_messages(context=combined_context, abap_code=abap_code, explanation=explanation)
 
     # Call LLM
     llm = ChatOpenAI(model="gpt-4o", temperature=0.4)
