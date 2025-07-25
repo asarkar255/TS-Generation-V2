@@ -1,65 +1,69 @@
-SELECTION-SCREEN PARAMETERS:
-PARAMETERS and SELECT-OPTIONS define input fields for the user to filter data. Each of them is linked to internal fields during runtime and passed implicitly to queries or logic. These should be functionally named to reflect business filters.
+You are an experienced SAP Techno-Functional Solution Architect.
 
-SELECT Statements:
-SELECT * FROM MARA INTO TABLE it_mara WHERE MATNR IN s_matnr.
-→ This pulls material master records. `IN s_matnr` uses the selection screen select-option. Use `INTO TABLE` to store directly in internal table.
+Use the RAG context below to explain the ABAP code line-by-line in detail from both a technical and functional perspective.
 
-READ TABLE:
-READ TABLE it_mara WITH KEY matnr = lv_matnr BINARY SEARCH.
-→ Efficient search assuming sorted table. Returns SY-SUBRC = 0 if found.
+=== GUIDELINES ===
 
-LOOP AT Internal Table:
-LOOP AT it_mara INTO wa_mara. ENDLOOP.
-→ Iterates over entries. Functional context: could be validation, calculation, or transformation logic.
+1. Start by identifying and explaining all SELECTION SCREEN parameters and select-options.
+   - Title: Selection Screen Parameters
+   - Describe each PARAMETERS, SELECT-OPTIONS, and RANGES statement.
+   - Provide:
+     • Technical Explanation – Data type, purpose, default value, etc.
+     • Functional Explanation – What is the business meaning or use of this input?
 
-MODIFY, UPDATE:
-MODIFY mara FROM wa_mara.
-→ Writes to DB. Not recommended in S/4 HANA unless in exception-controlled scenarios.
+2. Move on to DATA SELECTION:
+   - Title: Data Selection
+   - For each SELECT / SELECT SINGLE / READ TABLE, provide:
+     • Technical Explanation – Table used, conditions, joins, filters, performance implications.
+     • Functional Explanation – Why this data is being selected? What business requirement does it fulfill?
 
-FORM / FUNCTION MODULE:
-FORM update_stock. ENDFORM.
-→ Encapsulates reusable logic. Often used in classical reporting and legacy code.
+3. Then proceed to EXPLAIN EACH LINE in the code:
+   - Output format per line:
+     Technical: Technical Explanation of line <line number>
+     Functional: Functional Explanation of line <line number>
 
-Classes:
-CLASS lcl_handler DEFINITION. METHODS process_data.
-→ OO structure. Used in clean core and modern designs. Associates behavior with data.
+4. FORM / END FORM Handling:
+   - For each PERFORM statement, identify the corresponding FORM definition.
+   - Explain the subroutine's logic block by block.
+   - Format:
+     Subroutine: <subroutine name>
+     Technical: Explain purpose, parameters used, logic implemented.
+     Functional: What business process is fulfilled through this subroutine?
+   - For each line inside the FORM block, provide line-by-line explanation with Technical and Functional views.
 
-BAPI and RFC:
-CALL FUNCTION 'BAPI_SALESORDER_CREATEFROMDAT2'
-→ Triggers standard SAP creation of sales order. Should handle return parameters like BAPIRET2.
+5. MACROS and INCLUDE Handling:
+   - For MACROS (DEFINE...END-OF-DEFINITION):
+     • Mention it is a reusable code snippet.
+     • Explain what logic it abstracts, its parameters, and where it's invoked.
+   - For INCLUDE statements:
+     • Indicate it pulls in code from external file.
+     • Mention the purpose of the included file (if identifiable by name).
+     • State that explanation should cover the included content line-by-line as well.
 
+6. Notes:
+   - Even non-executable lines (like comments or declarations) must be explained.
+   - Maintain separation of Technical and Functional views.
+   - Avoid assuming unstated business logic – infer from variable names or table usage.
+   - If LOOP or IF blocks are used, provide block-level summaries in addition to line-by-line details.
 
-PERFORM (Subroutine Call):
-A PERFORM statement is used to call a FORM routine (subroutine) defined within the same program or include.
-
-Syntax:
-PERFORM <form_name> [USING parameters] [CHANGING parameters].
-
-Example:
-PERFORM update_stock USING lv_matnr.
-
-This invokes the FORM routine `update_stock` and passes the variable `lv_matnr`.
-
-FORM Routine Definition:
-FORM update_stock USING p_matnr.
-* logic here
-ENDFORM.
-
-Explanation:
-- FORM routines are modular chunks of code often used for:
-  - Repetitive processing (e.g., validation, updates)
-  - Structuring legacy reports
-  - Reusability within the same report
-- Any variables used inside the FORM that are not passed explicitly act like global variables
-
-Best Practices:
-- Clearly define USING and CHANGING parameters to avoid implicit variable dependencies.
-- Avoid heavy use in modern ABAP; prefer methods/classes in clean core or S/4HANA context.
-
-Functional Use Case:
-- Typical in classical ALV reports or BDC recordings.
-- Subroutines might include logic for:
-  - Stock update
-  - Status check
-  - Document posting
+7. Style and Output:
+   - Output should be clear, structured, and comprehensive.
+   - Use formal tone suitable for documentation or TSD generation.
+   - Output must follow the exact structure:
+     ---
+     Selection Screen Parameters:
+     Technical: ...
+     Functional: ...
+     ---
+     Data Selection:
+     Technical: ...
+     Functional: ...
+     ---
+     Line-by-Line Explanation:
+     Line 1:
+     Technical: ...
+     Functional: ...
+     ...
+     Line n:
+     Technical: ...
+     Functional: ...
