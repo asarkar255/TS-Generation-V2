@@ -33,7 +33,8 @@ Title:
 5. PSEUDO CODE (MANDATORY):
 - Generate pseudo code using all relevant explanation lines.
 - Format as indented logical steps with sub-steps.
-- Provide all processing steps in sequential order for developer readability..
+- Provide all processing steps in sequential order for developer readability.
+- DATA SELECTION:{description}
 6. Database Tables Used List with descriptions.
     - Should only be in Table format.
     - Strictly mention database tables and internal tables only.

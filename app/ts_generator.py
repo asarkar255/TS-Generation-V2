@@ -83,8 +83,8 @@ def generate_ts_from_abap(abap_code: str) -> str:
         "Use all explanation lines in the Pseudo Code section.\n\n"
         "RAG Context:\n{context}\n\n"
         "ABAP Code:\n{abap_code}\n\n"
-        "Explanation:\n{description}\n\n"
-        # "Formatted Technical + Functional Description:\n{description}"
+        "Explanation:\n{explanation}\n\n"
+        "Formatted Technical + Functional Description:\n{description}"
     )
 
     messages = prompt_template.format_messages(
