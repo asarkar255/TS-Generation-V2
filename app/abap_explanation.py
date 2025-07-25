@@ -20,7 +20,7 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 # ✅ Step 1: Extract line-by-line explanation
 def extract_abap_explanation(abap_code: str) -> str:
 # Load RAG knowledge base
-        rag_file_path = os.path.join(os.path.dirname(__file__), "abap_explanation.txt")
+        rag_file_path = os.path.join(os.path.dirname(__file__), "rag_for_abap_explanation.txt")
         loader = TextLoader(file_path=rag_file_path, encoding="utf-8")
         documents = loader.load()
 
