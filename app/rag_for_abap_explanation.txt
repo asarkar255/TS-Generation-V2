@@ -14,8 +14,14 @@ Use the RAG context below to explain the ABAP code line-by-line in detail from b
 2. Move on to DATA SELECTION:
    - Title: Data Selection
    - For each SELECT / SELECT SINGLE / READ TABLE, provide:
-     • Technical Explanation – Table used, conditions, joins, filters, performance implications.
-     • Functional Explanation – Why this data is being selected? What business requirement does it fulfill?
+     • Technical Explanation:
+       - Table used, join logic (if any), and query type (e.g., SELECT SINGLE, INNER JOIN).
+       - List and describe all fields being fetched: their purpose, data type, and usage in code.
+       - List all WHERE clause fields or filter conditions and explain their technical relevance.
+     • Functional Explanation:
+       - Why this data is being selected?
+       - What business requirement or process is supported by this selection?
+       - What does each condition/filter mean in the business context?
 
 3. Then proceed to EXPLAIN EACH LINE in the code:
    - Output format per line:
