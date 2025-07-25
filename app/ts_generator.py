@@ -46,7 +46,7 @@ def extract_abap_explanation(abap_code: str) -> str:
         HumanMessage(content=abap_code)
     ]
 
-    llm = ChatOpenAI(model="gpt-4.1", temperature=0.3)
+    llm = ChatOpenAI(model="gpt-4.1", temperature=0)
     explanation_response = llm.invoke(explanation_prompt)
     return explanation_response.content if hasattr(explanation_response, "content") else str(explanation_response)
 
@@ -61,7 +61,7 @@ def generate_description_from_explanation(explanation: str) -> str:
                               "Ensure MS Word-compatible formatting."),
         HumanMessage(content=explanation)
     ]
-    llm = ChatOpenAI(model="gpt-4.1", temperature=0.3)
+    llm = ChatOpenAI(model="gpt-4.1", temperature=0)
     response = llm.invoke(prompt)
     return response.content if hasattr(response, "content") else str(response)
 
@@ -95,6 +95,6 @@ def generate_ts_from_abap(abap_code: str) -> str:
 
     )
 
-    llm = ChatOpenAI(model="gpt-4.1", temperature=0.4)
+    llm = ChatOpenAI(model="gpt-4.1", temperature=0)
     response = llm.invoke(messages)
     return response.content if hasattr(response, "content") else str(response)
