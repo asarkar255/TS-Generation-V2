@@ -31,7 +31,7 @@ Title:
     -Local/Global Classes and Methods in separate table format type MS word with sub headers in new line with proper spacing.
     -Interfaces and Function Modules used in separate table format type MS word with sub headers in new line with proper spacing.
 5. PSEUDO CODE (MANDATORY):
-- Generate pseudo code using all relevant explanation lines and {description}.
+- Generate pseudo code using all relevant explanation lines and Description.
 - Format as indented logical steps with sub-steps.(MANDATORY)
 - Provide all processing steps in sequential order for developer readability.(MANDATORY)
 - DATA SELECTION:'DATA SELECTION:' from explanation.(MANDATORY)
@@ -65,6 +65,7 @@ ABAP Code:
 Explanation:
 {explanation}
 
-
+Description:
+{description}
 
 Final Output:

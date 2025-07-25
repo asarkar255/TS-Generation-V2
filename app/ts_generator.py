@@ -7,6 +7,7 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
 from langchain_core.messages import SystemMessage, HumanMessage
+from app.abap_explanation import extract_abap_explanation
 
 # Load environment variables
 load_dotenv()
@@ -28,27 +29,27 @@ vectorstore = Chroma.from_documents(docs, embedding)
 retriever = vectorstore.as_retriever()
 
 
-# ✅ Step 1: Extract line-by-line explanation
-def extract_abap_explanation(abap_code: str) -> str:
-    """
-    Generates a detailed line-by-line technical and functional explanation of the ABAP code.
-    """
-    explanation_prompt = [
-        SystemMessage(content="You are an experienced SAP Techno-Functional Solution Architect. "
-                              "Explain the given ABAP code line-by-line in detail from both a technical and functional perspective.\n"
-                              "Output should be like below:\n"
-                              "Selection Screen Parameters:\n(Go through all the selection scrren parameters and select-options in the ABAP code and explain them in detail THIS IS MANDATORY)\n"
-                              "DATA SELECTION:Technically explain each and every data select query in the ABAP code.\n"
-                              "Technical: Technical Explanation of selection screen PARAMETERS and SELECT-OPTIONS\n"
-                              "Technical: Technical Explanation of line n\n"
-                              "Functional: Functional Explanation of line n\n"
-                              "Ensure to cover all lines in the ABAP code."),
-        HumanMessage(content=abap_code)
-    ]
+# # ✅ Step 1: Extract line-by-line explanation
+# def extract_abap_explanation(abap_code: str) -> str:
+#     """
+#     Generates a detailed line-by-line technical and functional explanation of the ABAP code.
+#     """
+#     explanation_prompt = [
+#         SystemMessage(content="You are an experienced SAP Techno-Functional Solution Architect. "
+#                               "Explain the given ABAP code line-by-line in detail from both a technical and functional perspective.\n"
+#                               "Output should be like below:\n"
+#                               "Selection Screen Parameters:\n(Go through all the selection scrren parameters and select-options in the ABAP code and explain them in detail THIS IS MANDATORY)\n"
+#                               "DATA SELECTION:Technically explain each and every data select query in the ABAP code.\n"
+#                               "Technical: Technical Explanation of selection screen PARAMETERS and SELECT-OPTIONS\n"
+#                               "Technical: Technical Explanation of line n\n"
+#                               "Functional: Functional Explanation of line n\n"
+#                               "Ensure to cover all lines in the ABAP code."),
+#         HumanMessage(content=abap_code)
+#     ]
 
-    llm = ChatOpenAI(model="gpt-4.1", temperature=0)
-    explanation_response = llm.invoke(explanation_prompt)
-    return explanation_response.content if hasattr(explanation_response, "content") else str(explanation_response)
+#     llm = ChatOpenAI(model="gpt-4.1", temperature=0)
+#     explanation_response = llm.invoke(explanation_prompt)
+#     return explanation_response.content if hasattr(explanation_response, "content") else str(explanation_response)
 
 
 

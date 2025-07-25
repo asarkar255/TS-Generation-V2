@@ -1,0 +1,65 @@
+SELECTION-SCREEN PARAMETERS:
+PARAMETERS and SELECT-OPTIONS define input fields for the user to filter data. Each of them is linked to internal fields during runtime and passed implicitly to queries or logic. These should be functionally named to reflect business filters.
+
+SELECT Statements:
+SELECT * FROM MARA INTO TABLE it_mara WHERE MATNR IN s_matnr.
+→ This pulls material master records. `IN s_matnr` uses the selection screen select-option. Use `INTO TABLE` to store directly in internal table.
+
+READ TABLE:
+READ TABLE it_mara WITH KEY matnr = lv_matnr BINARY SEARCH.
+→ Efficient search assuming sorted table. Returns SY-SUBRC = 0 if found.
+
+LOOP AT Internal Table:
+LOOP AT it_mara INTO wa_mara. ENDLOOP.
+→ Iterates over entries. Functional context: could be validation, calculation, or transformation logic.
+
+MODIFY, UPDATE:
+MODIFY mara FROM wa_mara.
+→ Writes to DB. Not recommended in S/4 HANA unless in exception-controlled scenarios.
+
+FORM / FUNCTION MODULE:
+FORM update_stock. ENDFORM.
+→ Encapsulates reusable logic. Often used in classical reporting and legacy code.
+
+Classes:
+CLASS lcl_handler DEFINITION. METHODS process_data.
+→ OO structure. Used in clean core and modern designs. Associates behavior with data.
+
+BAPI and RFC:
+CALL FUNCTION 'BAPI_SALESORDER_CREATEFROMDAT2'
+→ Triggers standard SAP creation of sales order. Should handle return parameters like BAPIRET2.
+
+
+PERFORM (Subroutine Call):
+A PERFORM statement is used to call a FORM routine (subroutine) defined within the same program or include.
+
+Syntax:
+PERFORM <form_name> [USING parameters] [CHANGING parameters].
+
+Example:
+PERFORM update_stock USING lv_matnr.
+
+This invokes the FORM routine `update_stock` and passes the variable `lv_matnr`.
+
+FORM Routine Definition:
+FORM update_stock USING p_matnr.
+* logic here
+ENDFORM.
+
+Explanation:
+- FORM routines are modular chunks of code often used for:
+  - Repetitive processing (e.g., validation, updates)
+  - Structuring legacy reports
+  - Reusability within the same report
+- Any variables used inside the FORM that are not passed explicitly act like global variables
+
+Best Practices:
+- Clearly define USING and CHANGING parameters to avoid implicit variable dependencies.
+- Avoid heavy use in modern ABAP; prefer methods/classes in clean core or S/4HANA context.
+
+Functional Use Case:
+- Typical in classical ALV reports or BDC recordings.
+- Subroutines might include logic for:
+  - Stock update
+  - Status check
+  - Document posting
