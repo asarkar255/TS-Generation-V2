@@ -34,7 +34,7 @@ Title:
 - Generate pseudo code using all relevant explanation lines.
 - Format as indented logical steps with sub-steps.
 - Provide all processing steps in sequential order for developer readability.
-- DATA SELECTION:Fully Copy the 'DATA SELECTION:' from explanation.
+- DATA SELECTION:'DATA SELECTION:' from explanation.
 6. Database Tables Used List with descriptions.
     - Should only be in Table format.
     - Strictly mention database tables and internal tables only.
