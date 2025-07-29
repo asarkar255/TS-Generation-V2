@@ -9,7 +9,12 @@ from langchain_community.document_loaders import TextLoader
 from langchain_core.messages import SystemMessage, HumanMessage
 
 # Load environment variables
-load_dotenv()
+env_path = os.path.join(os.path.dirname(__file__), ".env")
+if os.path.exists(env_path):
+ load_dotenv(dotenv_path=env_path)
+else:
+    print(f"Warning: .env file not found at {env_path}. Environment variables may not be set correctly.")
+    
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
